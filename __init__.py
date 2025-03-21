@@ -4,31 +4,33 @@ from flask import render_template
 from flask import json
 from urllib.request import urlopen
 import sqlite3
-                                                                                                                                       
-app = Flask(__name__)                                                                                                                  
-                                                                                                                                       
+         
+
+app = Flask(__name__)
+
 @app.route('/')
-def hello_world():
-    return render_template('hello.html')
+def home():
+    return "<h1>Bienvenue sur l'API CryptoPython</h1>"
 
-key = b'UteTGWrXMaYPhGOHDvkbrULn9cV3u2H0JxghhnhP8s0='
-f = Fernet(key)
-
-@app.route('/encrypt/<string:valeur>')
-def encryptage(valeur):
-    valeur_bytes = valeur.encode()  # Conversion str -> bytes
-    token = f.encrypt(valeur_bytes)  # Encrypt la valeur
-    return f"Valeur encryptée : {token.decode()}"  # Retourne le token en str r
-
-@app.route('/decrypt/<string:token>')
-def decryptage(token):
+@app.route('/encrypt/<string:key>/<string:message>')
+def encrypt_message(key, message):
     try:
-        token_bytes = token.encode()  # Conversion str -> bytes
-        valeur_decryptee = f.decrypt(token_bytes)  # Déchiffre la valeur
-        return f"Valeur décryptée : {valeur_decryptee.decode()}"  # Retourne en str
+        key_bytes = key.encode()  # Convertir la clé en bytes
+        f = Fernet(key_bytes)  # Créer un objet Fernet avec cette clé
+        encrypted = f.encrypt(message.encode())  # Chiffrer le message
+        return encrypted.decode()  # Retourne le message chiffré
     except Exception as e:
-        return f"Erreur lors du déchiffrement : {str(e)}"
+        return f"Erreur : {str(e)}"
 
-                                                                                                                                                     
+@app.route('/decrypt/<string:key>/<string:token>')
+def decrypt_message(key, token):
+    try:
+        key_bytes = key.encode()  # Convertir la clé en bytes
+        f = Fernet(key_bytes)  # Créer un objet Fernet avec cette clé
+        decrypted = f.decrypt(token.encode())  # Déchiffrer le message
+        return decrypted.decode()  # Retourne le message déchiffré
+    except Exception as e:
+        return f"Erreur : {str(e)}"
+
 if __name__ == "__main__":
-  app.run(debug=True)
+    app.run(debug=True)
