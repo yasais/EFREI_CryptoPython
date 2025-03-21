@@ -10,7 +10,36 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "<h1>Bienvenue sur l'API CryptoPython</h1>"
+    return """<h1>Bienvenue sur l'API CryptoPython</h1>
+    <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 3em;
+      text-align: center;
+      margin: 0 20px;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>"""
+         
 
 @app.route('/encrypt/<string:key>/<string:message>')
 def encrypt_message(key, message):
